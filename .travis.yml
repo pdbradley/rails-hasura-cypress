@@ -29,3 +29,4 @@ before_script:
 script:
   # - $(yarn bin)/cypress run --record
   - bundle exec rspec spec/models
+
