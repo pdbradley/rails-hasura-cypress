@@ -1,52 +1,30 @@
-language: ruby
-cache: bundler
-rvm:
-  - 2.6.5
+language: node_js
+node_js:
+  - 9.11.2
 addons:
-  postgresql: '9.6'
-  apt:
-    packages:
-      # from https://docs.cypress.io/guides/guides/continuous-integration.html#Examples
-      - libgconf-2-4
+  postgresql: "9.6"
 services:
   - docker
+cache:
+  bundler: true
+  yarn: true
+  directories:
+    - /home/travis/.rvm/
+    - ~/.cache
 before_install:
   - docker run -d -p 8080:8080 -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:@localhost:5432/sandbox_test hasura/graphql-engine
   - bash bin/wait_for_port 8080
-
-before_script:
-  - psql -c 'create database sandbox_test;' -U postgres
-
-script:
-- bundle exec rake db:schema:load --trace
-
-
-# language: node_js
-# node_js:
-#   - 9.11.2
-# addons:
-#   postgresql: "9.4"
-# services:
-#   - redis-server
-#   - postgresql
-# cache:
-#   bundler: true
-#   yarn: true
-#   directories:
-#     - /home/travis/.rvm/
-#     - ~/.cache
-# before_install:
-#   - gem install bundler
-#   - bundle install
+  - gem install bundler
+  - bundle install
 # install:
 #   - yarn add cypress
-# before_script:
-#   - psql -c 'create database travis_ci_test;' -U postgres
-#   - bin/rails server &
-#   - bundle exec rake assets:precompile
-#   - sleep 10
-#   - RAILS_ENV=test bundle exec rake db:schema:load
-#   - RAILS_ENV=test bundle exec rake your_seed
-# script:
-#   - $(yarn bin)/cypress run --record
-#   - bundle exec rspec spec/controllers spec/models spec/jobs
+before_script:
+  - psql -c 'create database sandbox_test;' -U postgres
+  - bin/rails server &
+  - bundle exec rake assets:precompile
+  # - sleep 10
+  - RAILS_ENV=test bundle exec rake db:schema:load
+  # - RAILS_ENV=test bundle exec rake your_seed
+script:
+  # - $(yarn bin)/cypress run --record
+  - bundle exec rspec spec/models
