@@ -1,12 +1,18 @@
 language: ruby
 rvm:
   - 2.6.5
+addons:
+  postgresql: '9.6'
 services:
   - docker
 before_install:
-  # - gem install bundler:1.17.3
-  - docker run -d -p 5432:5432 postgres
-  - bash bin/wait_for_port 5432
-  - docker run -d -p 8080:8080 -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:@localhost:5432/postgres hasura/graphql-engine
+  - docker run -d -p 8080:8080 -e HASURA_GRAPHQL_DATABASE_URL=postgres://sandbox_test:@localhost:5432/postgres hasura/graphql-engine
   - bash bin/wait_for_port 8080
+
+before_script:
+  - psql -c 'create database sandbox_test;' -U postgres
+
+script:
+- bundle exec rake db:schema:load --trace
+
 
