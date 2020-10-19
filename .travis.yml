@@ -6,7 +6,7 @@ addons:
 services:
   - docker
 before_install:
-  - docker run -d -p 8080:8080 -e HASURA_GRAPHQL_DATABASE_URL=postgres://sandbox_test:@localhost:5432/postgres hasura/graphql-engine
+  - docker run -d -p 8080:8080 -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:@localhost:5432/sandbox_test hasura/graphql-engine
   - bash bin/wait_for_port 8080
 
 before_script:
