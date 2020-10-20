@@ -8,7 +8,7 @@ end
 
 CypressRails.hooks.after_transaction_start do
   # Called after the transaction is started (at launch and after each reset)
-  spot = Dog.create(name: 'Spot', breed: 'Pug')
+  spot = Dog.create(name: 'Wooter', breed: 'Pug')
 end
 
 CypressRails.hooks.after_state_reset do
