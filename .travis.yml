@@ -28,6 +28,6 @@ before_script:
   # - RAILS_ENV=test bundle exec rake your_seed
 script:
   # - $(yarn bin)/cypress run --record
-  - rake cypress:run
+  - CYPRESS_RAILS_CYPRESS_OPTS='--record' rake cypress:run
   - bundle exec rspec spec/models
 
