@@ -5,7 +5,10 @@ context('Dogs', () => {
     cy.visit('/dogs');
   });
 
-  it('Creates a Dog', () => {
+  it('Creates a new Dog', () => {
+    // verify Ag Grid boilerplate
+    cy.contains('Toyota').should('be.visible');
+
     // verify fixture is there already
     cy.contains('Spot').should('be.visible');
     cy.contains('Pug').should('be.visible');
@@ -19,5 +22,6 @@ context('Dogs', () => {
     cy.location('pathname').should('eq', '/dogs');
     cy.contains('Beans').should('be.visible');
     cy.contains('Mutt').should('be.visible');
+    cy.contains('Toyota').should('be.visible');
   });
 });
