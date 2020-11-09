@@ -1,0 +1,46 @@
+language: node_js
+node_js:
+  - 10
+addons:
+services:
+  - docker
+cache:
+  bundler: true
+  yarn: true
+  directories:
+    - /home/travis/.rvm/
+    - ~/.cache
+before_install:
+  - docker run -e POSTGRES_HOST_AUTH_METHOD=trust -d -p 5432:5432 postgres
+  - bash bin/wait_for_port 5432
+  - docker logs $(docker ps | sed -n '2 p' | awk '{print $1;}')
+  - psql -c 'create database sandbox_test;' -U postgres
+  - pwd
+  - ls
+  - curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+  - rvm install 2.6.5
+  - docker run -d -p 8081:8080 -v /home/travis/build/pdbradley/rails-hasura-cypress/hasura/metadata:/hasura-metadata -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:@localhost:5432/sandbox_test hasura/graphql-engine:v1.3.1.cli-migrations-v2
+  - bash bin/wait_for_port 8081
+  - docker ps
+  # this weird thing below finds the id of the running container
+  - docker logs $(docker ps | sed -n '2 p' | awk '{print $1;}')
+  - curl http://127.0.0.1:8081 -v
+  - curl http://localhost:8081 -v
+  # - cd hasura/test
+  # - hasura metadata apply
+  # - cd ../..
+  - gem install bundler
+  - bundle install
+# install:
+  - yarn add cypress
+before_script:
+  - bin/rails server &
+  - bundle exec rake assets:precompile
+  # - sleep 10
+  - RAILS_ENV=test bundle exec rake db:schema:load
+  # - RAILS_ENV=test bundle exec rake your_seed
+script:
+  # - $(yarn bin)/cypress run --record
+  - CYPRESS_RAILS_CYPRESS_OPTS='--record --key bd102e85-84bc-4950-94df-35548710c7a9' rake cypress:run
+  - bundle exec rspec spec/models
+
