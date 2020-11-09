@@ -12,6 +12,7 @@ cache:
     - /home/travis/.rvm/
     - ~/.cache
 before_install:
+  - BUILDID="build-$RANDOM"
   - psql -c 'create database sandbox_test;' -U postgres
   - bash bin/wait_for_port 5432
   - pwd
@@ -19,10 +20,11 @@ before_install:
   - curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
   - rvm install 2.6.5
   - docker run --network="host" -d -p 8081:8080 -v /home/travis/build/pdbradley/rails-hasura-cypress/hasura/metadata:/hasura-metadata -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:@127.0.0.1:5432/sandbox_test hasura/graphql-engine:v1.3.1.cli-migrations-v2
+  - docker logs -f $(docker ps | sed -n '2 p' | awk '{print $1;}')
   - bash bin/wait_for_port 8081
   - docker ps
   # this weird thing below in the parens finds the id of the running container
-  - docker logs $(docker ps | sed -n '2 p' | awk '{print $1;}')
+  # - docker logs $(docker ps | sed -n '2 p' | awk '{print $1;}')
   - curl http://127.0.0.1:8081 -v
   - curl http://localhost:8081 -v
   # - cd hasura/test
