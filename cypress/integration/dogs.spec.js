@@ -2,6 +2,7 @@
 
 context('Dogs', () => {
   beforeEach(() => {
+    cy.request('/cypress_rails_reset_state');
     cy.visit('/dogs');
   });
 
@@ -24,13 +25,8 @@ context('Dogs', () => {
   });
 
   it('Verifies Data within Ag Grid', () => {
-    assertCellValueInRowColumnId(0, 'make', 'Toyota');
-    assertCellValueInRowColumnId(0, 'model', 'Celica');
-    assertCellValueInRowColumnId(0, 'price', '35000');
-
-    assertCellValueInRowColumnId(1, 'make', 'Ford');
-    assertCellValueInRowColumnId(1, 'model', 'Mondeo');
-    assertCellValueInRowColumnId(1, 'price', '32000');
+    assertCellValueInRowColumnId(0, 'name', 'Spot');
+    assertCellValueInRowColumnId(0, 'breed', 'Pug');
   });
 
   function assertCellValueInFirstRow(colId, value) {

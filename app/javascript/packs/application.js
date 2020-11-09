@@ -13,3 +13,6 @@ require('channels');
 //
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
+//
+//
+// from https://www.w3schools.com/js/js_cookies.asp

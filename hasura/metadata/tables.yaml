@@ -1,0 +1,1453 @@
+- table:
+    schema: public
+    name: addresses
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: adjustment_explanation
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: adjustments
+  object_relationships:
+  - name: adjustments_submission
+    using:
+      foreign_key_constraint_on: adjustments_submission_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: adjustments_submissions
+  object_relationships:
+  - name: ar_loan
+    using:
+      foreign_key_constraint_on: ar_loan_id
+  - name: combined_file
+    using:
+      foreign_key_constraint_on: combined_file_id
+  array_relationships:
+  - name: adjustments
+    using:
+      foreign_key_constraint_on:
+        column: adjustments_submission_id
+        table:
+          schema: public
+          name: adjustments
+  - name: collections
+    using:
+      foreign_key_constraint_on:
+        column: adjustments_submission_id
+        table:
+          schema: public
+          name: collections
+  select_permissions:
+  - role: client
+    permission:
+      columns: '*'
+      filter:
+        ar_loan:
+          loan_set:
+            client:
+              user_clients:
+                user:
+                  id:
+                    _eq: X-Hasura-User-Id
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: applied_deposits
+  object_relationships:
+  - name: collections_submission
+    using:
+      foreign_key_constraint_on: collections_submission_id
+  - name: fbo_bank_account_transaction
+    using:
+      foreign_key_constraint_on: fbo_bank_account_transaction_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: ar_internal_metadata
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: ar_loans
+  object_relationships:
+  - name: loan_set
+    using:
+      foreign_key_constraint_on: loan_set_id
+  array_relationships:
+  - name: adjustments_submissions
+    using:
+      foreign_key_constraint_on:
+        column: ar_loan_id
+        table:
+          schema: public
+          name: adjustments_submissions
+  - name: collections_submissions
+    using:
+      foreign_key_constraint_on:
+        column: ar_loan_id
+        table:
+          schema: public
+          name: collections_submissions
+  - name: invoice_line_profiles
+    using:
+      foreign_key_constraint_on:
+        column: loan_id
+        table:
+          schema: public
+          name: invoice_line_profiles
+  - name: loan_advances
+    using:
+      foreign_key_constraint_on:
+        column: loan_id
+        table:
+          schema: public
+          name: loan_advances
+  - name: loan_fees
+    using:
+      foreign_key_constraint_on:
+        column: loan_id
+        table:
+          schema: public
+          name: loan_fees
+  - name: loan_interests
+    using:
+      foreign_key_constraint_on:
+        column: loan_id
+        table:
+          schema: public
+          name: loan_interests
+  - name: sales_invoices
+    using:
+      foreign_key_constraint_on:
+        column: ar_loan_id
+        table:
+          schema: public
+          name: sales_invoices
+  - name: sales_submissions
+    using:
+      foreign_key_constraint_on:
+        column: ar_loan_id
+        table:
+          schema: public
+          name: sales_submissions
+  select_permissions:
+  - role: client
+    permission:
+      columns: '*'
+      filter:
+        loan_set:
+          client:
+            user_clients:
+              user:
+                id:
+                  _eq: X-Hasura-User-Id
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: attached_files
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: balances
+  object_relationships:
+  - name: loan_set
+    using:
+      foreign_key_constraint_on: loan_set_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: banks
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: client_advisors
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: client_form_template_assignments
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  - name: form_template
+    using:
+      foreign_key_constraint_on: form_template_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: client_forms
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  - name: form_template
+    using:
+      foreign_key_constraint_on: form_template_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: client_submission_assignments
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  - name: submission_definition
+    using:
+      foreign_key_constraint_on: submission_definition_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: clients
+  array_relationships:
+  - name: attached_files
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: attached_files
+  - name: client_advisors
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: client_advisors
+  - name: client_form_template_assignments
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: client_form_template_assignments
+  - name: client_forms
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: client_forms
+  - name: client_submission_assignments
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: client_submission_assignments
+  - name: default_settings
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: default_settings
+  - name: filtering_and_mapping_preferences
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: filtering_and_mapping_preferences
+  - name: loan_sets
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: loan_sets
+  - name: user_client_submission_assignments
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: user_client_submission_assignments
+  - name: user_clients
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: user_clients
+        column_mapping:
+          id: client_id
+  - name: users
+    using:
+      foreign_key_constraint_on:
+        column: client_id
+        table:
+          schema: public
+          name: users
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: collections
+  object_relationships:
+  - name: adjustments_submission
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: adjustments_submissions
+        column_mapping:
+          adjustments_submission_id: id
+  - name: collections_submission
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: collections_submissions
+        column_mapping:
+          collections_submission_id: id
+  select_permissions:
+  - role: client
+    permission:
+      columns: '*'
+      filter:
+        _or:
+        - collections_submission:
+            ar_loan:
+              loan_set:
+                client:
+                  user_clients:
+                    user:
+                      id:
+                        _eq: X-Hasura-User-Id
+        - adjustments_submission:
+            ar_loan:
+              loan_set:
+                client:
+                  user_clients:
+                    user:
+                      id:
+                        _eq: X-Hasura-User-Id
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: collections_submissions
+  object_relationships:
+  - name: ar_loan
+    using:
+      foreign_key_constraint_on: ar_loan_id
+  - name: combined_file
+    using:
+      foreign_key_constraint_on: combined_file_id
+  array_relationships:
+  - name: applied_deposits
+    using:
+      foreign_key_constraint_on:
+        column: collections_submission_id
+        table:
+          schema: public
+          name: applied_deposits
+  - name: collections
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: collections
+        column_mapping:
+          id: collections_submission_id
+  select_permissions:
+  - role: client
+    permission:
+      columns: '*'
+      filter:
+        ar_loan:
+          loan_set:
+            client:
+              user_clients:
+                user:
+                  id:
+                    _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: combined_files
+  array_relationships:
+  - name: adjustments_submissions
+    using:
+      foreign_key_constraint_on:
+        column: combined_file_id
+        table:
+          schema: public
+          name: adjustments_submissions
+  - name: collections_submissions
+    using:
+      foreign_key_constraint_on:
+        column: combined_file_id
+        table:
+          schema: public
+          name: collections_submissions
+  - name: combining_details
+    using:
+      foreign_key_constraint_on:
+        column: combined_file_id
+        table:
+          schema: public
+          name: combining_details
+  - name: sales_submissions
+    using:
+      foreign_key_constraint_on:
+        column: combined_file_id
+        table:
+          schema: public
+          name: sales_submissions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: combining_details
+  object_relationships:
+  - name: combined_file
+    using:
+      foreign_key_constraint_on: combined_file_id
+  - name: imported_file
+    using:
+      foreign_key_constraint_on: imported_file_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: comments
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: commontator_comments
+  array_relationships:
+  - name: commontator_mentions
+    using:
+      foreign_key_constraint_on:
+        column: commontator_comment_id
+        table:
+          schema: public
+          name: commontator_mentions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: commontator_mentions
+  object_relationships:
+  - name: commontator_comment
+    using:
+      foreign_key_constraint_on: commontator_comment_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: commontator_subscriptions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: commontator_threads
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: default_settings
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: delayed_import_file_jobs
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: delayed_jobs
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: entities
+  array_relationships:
+  - name: loan_sets
+    using:
+      foreign_key_constraint_on:
+        column: entity_id
+        table:
+          schema: public
+          name: loan_sets
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: fbo_bank_account_transactions
+  object_relationships:
+  - name: fbo_bank_account
+    using:
+      foreign_key_constraint_on: fbo_bank_account_id
+  array_relationships:
+  - name: applied_deposits
+    using:
+      foreign_key_constraint_on:
+        column: fbo_bank_account_transaction_id
+        table:
+          schema: public
+          name: applied_deposits
+  - name: payment_invoice_assignments
+    using:
+      foreign_key_constraint_on:
+        column: fbo_bank_account_transaction_id
+        table:
+          schema: public
+          name: payment_invoice_assignments
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: fbo_bank_accounts
+  object_relationships:
+  - name: loan_set
+    using:
+      foreign_key_constraint_on: loan_set_id
+  array_relationships:
+  - name: fbo_bank_account_transactions
+    using:
+      foreign_key_constraint_on:
+        column: fbo_bank_account_id
+        table:
+          schema: public
+          name: fbo_bank_account_transactions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: filtering_and_mapping_preferences
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  array_relationships:
+  - name: imported_files
+    using:
+      foreign_key_constraint_on:
+        column: filtering_and_mapping_preference_id
+        table:
+          schema: public
+          name: imported_files
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: filtering_details
+  object_relationships:
+  - name: imported_file
+    using:
+      foreign_key_constraint_on: imported_file_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: financial_statement_submissions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: form_templates
+  array_relationships:
+  - name: client_form_template_assignments
+    using:
+      foreign_key_constraint_on:
+        column: form_template_id
+        table:
+          schema: public
+          name: client_form_template_assignments
+  - name: client_forms
+    using:
+      foreign_key_constraint_on:
+        column: form_template_id
+        table:
+          schema: public
+          name: client_forms
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: general_submissions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: imported_file_rows
+  object_relationships:
+  - name: imported_file
+    using:
+      foreign_key_constraint_on: imported_file_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: imported_files
+  object_relationships:
+  - name: filtering_and_mapping_preference
+    using:
+      foreign_key_constraint_on: filtering_and_mapping_preference_id
+  array_relationships:
+  - name: combining_details
+    using:
+      foreign_key_constraint_on:
+        column: imported_file_id
+        table:
+          schema: public
+          name: combining_details
+  - name: filtering_details
+    using:
+      foreign_key_constraint_on:
+        column: imported_file_id
+        table:
+          schema: public
+          name: filtering_details
+  - name: imported_file_rows
+    using:
+      foreign_key_constraint_on:
+        column: imported_file_id
+        table:
+          schema: public
+          name: imported_file_rows
+  - name: mapping_details
+    using:
+      foreign_key_constraint_on:
+        column: imported_file_id
+        table:
+          schema: public
+          name: mapping_details
+  - name: verifying_details
+    using:
+      foreign_key_constraint_on:
+        column: imported_file_id
+        table:
+          schema: public
+          name: verifying_details
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_adjustments
+  object_relationships:
+  - name: invoice
+    using:
+      foreign_key_constraint_on: invoice_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_collateral_adjustment_definitions
+  array_relationships:
+  - name: invoice_collateral_adjustments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_collateral_adjustment_definition_id
+        table:
+          schema: public
+          name: invoice_collateral_adjustments
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_collateral_adjustments
+  object_relationships:
+  - name: invoice
+    using:
+      foreign_key_constraint_on: invoice_id
+  - name: invoice_collateral_adjustment_definition
+    using:
+      foreign_key_constraint_on: invoice_collateral_adjustment_definition_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_debtor_collateral_adjustment_definitions
+  array_relationships:
+  - name: invoice_debtor_collateral_adjustments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_collateral_adjustment_definition_id
+        table:
+          schema: public
+          name: invoice_debtor_collateral_adjustments
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_debtor_collateral_adjustments
+  object_relationships:
+  - name: invoice_debtor
+    using:
+      foreign_key_constraint_on: invoice_debtor_id
+  - name: invoice_debtor_collateral_adjustment_definition
+    using:
+      foreign_key_constraint_on: invoice_debtor_collateral_adjustment_definition_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_debtor_credit_assignments
+  object_relationships:
+  - name: invoice
+    using:
+      foreign_key_constraint_on: invoice_id
+  - name: invoice_debtor_credit
+    using:
+      foreign_key_constraint_on: invoice_debtor_credit_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_debtor_credits
+  object_relationships:
+  - name: invoice_debtor
+    using:
+      foreign_key_constraint_on: invoice_debtor_id
+  array_relationships:
+  - name: invoice_debtor_credit_assignments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_credit_id
+        table:
+          schema: public
+          name: invoice_debtor_credit_assignments
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_debtor_parent_collateral_adjustment_definitions
+  array_relationships:
+  - name: invoice_debtor_parent_collateral_adjustments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_parent_collateral_adjustment_definition_id
+        table:
+          schema: public
+          name: invoice_debtor_parent_collateral_adjustments
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_debtor_parent_collateral_adjustments
+  object_relationships:
+  - name: invoice_debtor_parent
+    using:
+      foreign_key_constraint_on: invoice_debtor_parent_id
+  - name: invoice_debtor_parent_collateral_adjustment_definition
+    using:
+      foreign_key_constraint_on: invoice_debtor_parent_collateral_adjustment_definition_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_debtor_parents
+  object_relationships:
+  - name: loan_set
+    using:
+      foreign_key_constraint_on: loan_set_id
+  array_relationships:
+  - name: invoice_debtor_parent_collateral_adjustments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_parent_id
+        table:
+          schema: public
+          name: invoice_debtor_parent_collateral_adjustments
+  - name: invoice_debtors
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_parent_id
+        table:
+          schema: public
+          name: invoice_debtors
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_debtors
+  object_relationships:
+  - name: invoice_debtor_parent
+    using:
+      foreign_key_constraint_on: invoice_debtor_parent_id
+  - name: loan_set
+    using:
+      foreign_key_constraint_on: loan_set_id
+  array_relationships:
+  - name: invoice_debtor_collateral_adjustments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_id
+        table:
+          schema: public
+          name: invoice_debtor_collateral_adjustments
+  - name: invoice_debtor_credits
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_id
+        table:
+          schema: public
+          name: invoice_debtor_credits
+  - name: invoices
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_id
+        table:
+          schema: public
+          name: invoices
+  - name: sales_invoices
+    using:
+      foreign_key_constraint_on:
+        column: invoice_debtor_id
+        table:
+          schema: public
+          name: sales_invoices
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoice_line_profiles
+  object_relationships:
+  - name: ar_loan
+    using:
+      foreign_key_constraint_on: loan_id
+  array_relationships:
+  - name: invoices
+    using:
+      foreign_key_constraint_on:
+        column: invoice_line_profile_id
+        table:
+          schema: public
+          name: invoices
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: invoices
+  object_relationships:
+  - name: invoice_debtor
+    using:
+      foreign_key_constraint_on: invoice_debtor_id
+  - name: invoice_line_profile
+    using:
+      foreign_key_constraint_on: invoice_line_profile_id
+  array_relationships:
+  - name: invoice_adjustments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_id
+        table:
+          schema: public
+          name: invoice_adjustments
+  - name: invoice_collateral_adjustments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_id
+        table:
+          schema: public
+          name: invoice_collateral_adjustments
+  - name: invoice_debtor_credit_assignments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_id
+        table:
+          schema: public
+          name: invoice_debtor_credit_assignments
+  - name: payment_invoice_assignments
+    using:
+      foreign_key_constraint_on:
+        column: invoice_id
+        table:
+          schema: public
+          name: payment_invoice_assignments
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: loan_advances
+  object_relationships:
+  - name: ar_loan
+    using:
+      foreign_key_constraint_on: loan_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: loan_fees
+  object_relationships:
+  - name: ar_loan
+    using:
+      foreign_key_constraint_on: loan_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: loan_interests
+  object_relationships:
+  - name: ar_loan
+    using:
+      foreign_key_constraint_on: loan_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: loan_sets
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  - name: entity
+    using:
+      foreign_key_constraint_on: entity_id
+  array_relationships:
+  - name: ar_loans
+    using:
+      foreign_key_constraint_on:
+        column: loan_set_id
+        table:
+          schema: public
+          name: ar_loans
+  - name: balances
+    using:
+      foreign_key_constraint_on:
+        column: loan_set_id
+        table:
+          schema: public
+          name: balances
+  - name: fbo_bank_accounts
+    using:
+      foreign_key_constraint_on:
+        column: loan_set_id
+        table:
+          schema: public
+          name: fbo_bank_accounts
+  - name: invoice_debtor_parents
+    using:
+      foreign_key_constraint_on:
+        column: loan_set_id
+        table:
+          schema: public
+          name: invoice_debtor_parents
+  - name: invoice_debtors
+    using:
+      foreign_key_constraint_on:
+        column: loan_set_id
+        table:
+          schema: public
+          name: invoice_debtors
+  - name: rates
+    using:
+      foreign_key_constraint_on:
+        column: loan_set_id
+        table:
+          schema: public
+          name: rates
+  - name: submissions
+    using:
+      foreign_key_constraint_on:
+        column: loan_set_id
+        table:
+          schema: public
+          name: submissions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: mapping_details
+  object_relationships:
+  - name: imported_file
+    using:
+      foreign_key_constraint_on: imported_file_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: payment_invoice_assignments
+  object_relationships:
+  - name: fbo_bank_account_transaction
+    using:
+      foreign_key_constraint_on: fbo_bank_account_transaction_id
+  - name: invoice
+    using:
+      foreign_key_constraint_on: invoice_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: pg_stat_statements
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: rates
+  object_relationships:
+  - name: loan_set
+    using:
+      foreign_key_constraint_on: loan_set_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: request_for_advance_submissions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: roles
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: sales_invoices
+  object_relationships:
+  - name: ar_loan
+    using:
+      foreign_key_constraint_on: ar_loan_id
+  - name: invoice_debtor
+    using:
+      foreign_key_constraint_on: invoice_debtor_id
+  - name: sales_submission
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: sales_submissions
+        column_mapping:
+          sales_submission_id: id
+  select_permissions:
+  - role: client
+    permission:
+      columns: '*'
+      filter:
+        ar_loan:
+          loan_set:
+            client:
+              user_clients:
+                user:
+                  id:
+                    _eq: X-Hasura-User-Id
+      allow_aggregations: true
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: sales_submissions
+  object_relationships:
+  - name: ar_loan
+    using:
+      foreign_key_constraint_on: ar_loan_id
+  - name: combined_file
+    using:
+      foreign_key_constraint_on: combined_file_id
+  array_relationships:
+  - name: sales_invoices
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: sales_invoices
+        column_mapping:
+          id: sales_submission_id
+  select_permissions:
+  - role: client
+    permission:
+      columns: '*'
+      filter:
+        ar_loan:
+          loan_set:
+            client:
+              user_clients:
+                user:
+                  id:
+                    _eq: X-Hasura-User-Id
+- table:
+    schema: public
+    name: snapshots
+  object_relationships:
+  - name: submission
+    using:
+      foreign_key_constraint_on: submission_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: submission_definitions
+  array_relationships:
+  - name: client_submission_assignments
+    using:
+      foreign_key_constraint_on:
+        column: submission_definition_id
+        table:
+          schema: public
+          name: client_submission_assignments
+  - name: user_client_submission_assignments
+    using:
+      foreign_key_constraint_on:
+        column: submission_definition_id
+        table:
+          schema: public
+          name: user_client_submission_assignments
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: submission_statuses
+  array_relationships:
+  - name: submissions
+    using:
+      foreign_key_constraint_on:
+        column: submission_status_id
+        table:
+          schema: public
+          name: submissions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: submissions
+  object_relationships:
+  - name: loan_set
+    using:
+      foreign_key_constraint_on: loan_set_id
+  - name: submission_status
+    using:
+      foreign_key_constraint_on: submission_status_id
+  array_relationships:
+  - name: snapshots
+    using:
+      foreign_key_constraint_on:
+        column: submission_id
+        table:
+          schema: public
+          name: snapshots
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: user_client_submission_assignments
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  - name: submission_definition
+    using:
+      foreign_key_constraint_on: submission_definition_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: user_clients
+  object_relationships:
+  - name: client
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: clients
+        column_mapping:
+          client_id: id
+  - name: user
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: users
+        column_mapping:
+          user_id: id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: users
+  object_relationships:
+  - name: client
+    using:
+      foreign_key_constraint_on: client_id
+  array_relationships:
+  - name: commontator_mentions
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: commontator_mentions
+  - name: user_client_submission_assignments
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          schema: public
+          name: user_client_submission_assignments
+  - name: user_clients
+    using:
+      manual_configuration:
+        remote_table:
+          schema: public
+          name: user_clients
+        column_mapping:
+          id: user_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: users_roles
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: verifying_details
+  object_relationships:
+  - name: imported_file
+    using:
+      foreign_key_constraint_on: imported_file_id
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: versions
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}
+- table:
+    schema: public
+    name: view_sales_invoices_with_collections_with_balances
+  select_permissions:
+  - role: employee
+    permission:
+      columns: '*'
+      filter: {}

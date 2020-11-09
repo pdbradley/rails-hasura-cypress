@@ -1,0 +1,8 @@
+#! /bin/bash
+
+# must be run from hasura/test
+
+cd development_reference
+hasura metadata export
+cd ..
+hasura metadata apply

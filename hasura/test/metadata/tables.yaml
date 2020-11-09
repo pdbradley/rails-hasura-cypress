@@ -1,0 +1,6 @@
+- table:
+    schema: public
+    name: cats
+- table:
+    schema: public
+    name: dogs

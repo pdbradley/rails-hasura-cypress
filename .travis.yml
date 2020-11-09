@@ -12,9 +12,11 @@ cache:
     - /home/travis/.rvm/
     - ~/.cache
 before_install:
+  - npm install --global hasura-cli
   - rvm install 2.6.5
   - docker run -d -p 8080:8080 -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:@localhost:5432/sandbox_test hasura/graphql-engine
   - bash bin/wait_for_port 8080
+  - bash (cd hasura && hasura metadata apply)
   - gem install bundler
   - bundle install
 # install:
