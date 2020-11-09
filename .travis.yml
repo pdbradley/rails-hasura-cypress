@@ -14,7 +14,6 @@ cache:
 before_install:
   - psql -c 'create database sandbox_test;' -U postgres
   - bash bin/wait_for_port 5432
-  - docker logs $(docker ps | sed -n '2 p' | awk '{print $1;}')
   - pwd
   - ls
   - curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
