@@ -17,7 +17,7 @@ before_install:
   - ls
   - curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
   - rvm install 2.6.5
-  - docker run -d -p 8081:8080 -v /home/travis/build/pdbradley/rails-hasura-cypress/hasura/metadata:/hasura-metadata -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:@localhost:5432/sandbox_test hasura/graphql-engine:v1.3.1.cli-migrations-v2
+  - docker run -d -p 8081:8080 -v /home/travis/build/pdbradley/rails-hasura-cypress/hasura/metadata:/hasura-metadata -e HASURA_GRAPHQL_DATABASE_URL=postgres://postgres:@host.docker.internal:5432/sandbox_test hasura/graphql-engine:v1.3.1.cli-migrations-v2
   - bash bin/wait_for_port 8081
   - docker ps
   # this weird thing below finds the id of the running container
