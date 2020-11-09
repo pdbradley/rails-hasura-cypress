@@ -13,6 +13,7 @@ cache:
 before_install:
   - docker run -d -p 5432:5432 postgres
   - bash bin/wait_for_port 5432
+  - docker logs -f $(docker ps | sed -n '2 p' | awk '{print $1;}')
   - psql -c 'create database sandbox_test;' -U postgres
   - pwd
   - ls
