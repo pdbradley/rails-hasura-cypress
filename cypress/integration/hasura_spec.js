@@ -2,7 +2,7 @@
 
 context('Hasura', () => {
   beforeEach(() => {
-    cy.visit('https://localhost:8080');
+    cy.visit('http://localhost:8081');
   });
 
   it('Verifies Fixture Data', () => {});
