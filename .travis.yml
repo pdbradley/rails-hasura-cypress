@@ -12,6 +12,7 @@ cache:
     - /home/travis/.rvm/
     - ~/.cache
 before_install:
+  - psql -c 'create database sandbox_test;' -U postgres
   - pwd
   - ls
   - curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
@@ -29,7 +30,6 @@ before_install:
 # install:
   - yarn add cypress
 before_script:
-  - psql -c 'create database sandbox_test;' -U postgres
   - bin/rails server &
   - bundle exec rake assets:precompile
   # - sleep 10
