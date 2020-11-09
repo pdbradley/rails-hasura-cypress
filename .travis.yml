@@ -13,7 +13,7 @@ cache:
 before_install:
   - docker run -e POSTGRES_HOST_AUTH_METHOD=trust -d -p 5432:5432 postgres
   - bash bin/wait_for_port 5432
-  - docker logs -f $(docker ps | sed -n '2 p' | awk '{print $1;}')
+  - docker logs $(docker ps | sed -n '2 p' | awk '{print $1;}')
   - psql -c 'create database sandbox_test;' -U postgres
   - pwd
   - ls
@@ -23,7 +23,7 @@ before_install:
   - bash bin/wait_for_port 8081
   - docker ps
   # this weird thing below finds the id of the running container
-  - docker logs -f $(docker ps | sed -n '2 p' | awk '{print $1;}')
+  - docker logs $(docker ps | sed -n '2 p' | awk '{print $1;}')
   - curl http://127.0.0.1:8081 -v
   - curl http://localhost:8081 -v
   # - cd hasura/test
