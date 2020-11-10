@@ -1,4 +1,4 @@
-language: node_js
+language: ruby
 node_js:
   - 10
 addons:
@@ -39,9 +39,7 @@ before_install:
 before_script:
   - bin/rails server &
   - bundle exec rake assets:precompile
-  # - sleep 10
   - RAILS_ENV=test bundle exec rake db:schema:load
-  # - RAILS_ENV=test bundle exec rake your_seed
 script:
   # - $(yarn bin)/cypress run --record
   - CYPRESS_RAILS_CYPRESS_OPTS='--record --key bd102e85-84bc-4950-94df-35548710c7a9' rake cypress:run RAILS_ENV=test HASURA_URL=http://localhost:8080/v1/graphql
